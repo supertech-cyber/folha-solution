@@ -145,6 +145,7 @@ class ReadExcelFopag:
         flag_proventos = False
         achou_centro_custo = False
         achou_empresa = False
+        folha_decimo = False
 
         self.folha_pagto = FolhaPagto()
 
@@ -158,8 +159,12 @@ class ReadExcelFopag:
                 # Pegar competência
                 try:
                     if 'espelho'.upper() in self.maiuscula(registro[0]):
+
                         competencia = get_competencia_folha(
                             texto=' '.join(registro))
+                    if 'espelho'.upper() in self.maiuscula(registro[0]) and '13º' in registro[0].upper():
+                        folha_decimo = True
+
                 except Exception as e:
                     pass
 
@@ -242,6 +247,13 @@ class ReadExcelFopag:
                     ), descricao=self.maiuscula(registro[0]), valor=registro[1])
 
                     novo_centro_custo.add_evento(novo_evento)
+
+                if ('total GFD'.upper() == self.maiuscula(registro[0])):
+
+                    if folha_decimo:
+                        achou_centro_custo = False
+                        achou_empresa = False
+                        continue
 
                 if 'GPS patronal'.upper() in self.maiuscula(registro[0]) and achou_centro_custo:
                     novo_centro_custo = nova_empresa.procurar_centro_custo(
