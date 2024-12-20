@@ -162,6 +162,7 @@ class ReadExcelFopag:
 
                         competencia = get_competencia_folha(
                             texto=' '.join(registro))
+                        
                     if 'espelho'.upper() in self.maiuscula(registro[0]) and '13º' in registro[0].upper():
                         folha_decimo = True
 
